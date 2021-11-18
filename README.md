@@ -1,4 +1,4 @@
 # KPL_Fantasy_App
 A fantasy league app for Kenya Premier League
 
-KPl Fantasy app utilises the [live score api](https://live-score-api.com/users/sign-up)
+KPL Fantasy app utilises the [live score api](https://live-score-api.com/users/sign-up)
