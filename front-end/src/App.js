@@ -2,9 +2,11 @@ import {useEffect,useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import Header from './components/Header';
+
 function App() {
   const fixturesURL = "api-client/fixtures/matches.json?competition_id=37&key=yu96VQtg9w5X1Kg5&secret=ZveiqH7aCOdGDFFcaOi5EMmOirLkc1pb"
-  const [fixtures, setFixtures] = useState();
+  const [fixtures, setFixtures] = useState([]);
 
  useEffect(() => {
      fetch(fixturesURL,{
@@ -20,17 +22,20 @@ function App() {
         throw response
       })
       .then(data => {
-        setFixtures(data)
+        if(data.success){
+          setFixtures(data.data.fixtures)
+        }
       })
       .catch(error => {
         console.error(error)
       })
- },[setFixtures])
+ },[setFixtures,fixturesURL])
 
- console.log(fixtures.data)
+ console.log(fixtures)
 
   return (
     <div className="App">
+      <Header/>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
