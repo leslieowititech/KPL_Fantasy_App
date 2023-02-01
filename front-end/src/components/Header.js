@@ -24,6 +24,9 @@ export default function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Home
           </Typography>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Fixtures
+          </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
