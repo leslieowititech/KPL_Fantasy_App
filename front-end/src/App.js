@@ -1,39 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
 import Header from "./components/Header";
 import Fixtures from "./components/Fixtures";
+import { useFetchFixtures } from "./hooks/useFetchFixtures.js";
 
 function App() {
-  const fixturesURL =
-    "api-client/fixtures/matches.json?competition_id=37&key=yu96VQtg9w5X1Kg5&secret=ZveiqH7aCOdGDFFcaOi5EMmOirLkc1pb";
-  const [fixtures, setFixtures] = useState([]);
-
-  useMemo(() => {
-    fetch(fixturesURL, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
-      })
-      .then((data) => {
-        if (data.success) {
-          setFixtures(data.data.fixtures);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [setFixtures, fixturesURL]);
-
-  console.log(fixtures);
+  const fixtures = useFetchFixtures();
 
   return (
     <div className="App">

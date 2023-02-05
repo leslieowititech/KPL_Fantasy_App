@@ -29,7 +29,7 @@ const Fixtures = ({ fixtures }) => {
     <List>
       {fixtureDates.map((date, index) => (
         <Card key={index}>
-          <Typography>
+          <Typography variant="h4">
             {new Date(date).toLocaleDateString("en-us", {
               weekday: "long",
               year: "numeric",
@@ -39,8 +39,15 @@ const Fixtures = ({ fixtures }) => {
           </Typography>
           {groupedFixtures[date].map((game) => (
             <List key={game.id}>
-              <Box sx={{ display: "flex", flexDirection: "row",alignItems:"center",border:"1px solid red" }}>
-                <Typography>{game.home_name}</Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="p">{game.home_name}</Typography>
                 <Box sx={{ border: "1px solid grey", maxWidth: "max-content" }}>
                   {convertMillitaryTimeToStandardTime(game.time)}
                 </Box>
