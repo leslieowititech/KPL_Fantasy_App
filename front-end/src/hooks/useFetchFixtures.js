@@ -25,5 +25,3 @@ export const useFetchFixtures = () => {
 
   return fixtures;
 };
-
-export default useFetchFixtures;
