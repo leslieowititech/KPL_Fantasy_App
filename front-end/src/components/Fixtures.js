@@ -1,9 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import {
   List,
   Typography,
-  Card,
   Box,
   Divider,
   Grid,
@@ -11,35 +11,36 @@ import {
 } from "@mui/material";
 import StadiumIcon from "@mui/icons-material/Stadium";
 
-const Fixtures = ({ fixtures }) => {
+const Fixtures = ({ fixtures = [] }) => {
   const groupFixturesByDate = (fixtures) => {
     const res = {};
-    fixtures.forEach((game) => {
-      if (res[game.date]) {
-        res[game.date].push(game);
-      } else {
-        res[game.date] = [game];
-      }
-    });
+    if (fixtures.length) {
+      fixtures.forEach((game) => {
+        if (res[game.date]) {
+          res[game.date].push(game);
+        } else {
+          res[game.date] = [game];
+        }
+      });
+    }
     return res;
   };
 
   const groupedFixtures = groupFixturesByDate(fixtures);
-  console.log(groupedFixtures);
 
   const fixtureDates = Object.keys(groupedFixtures);
 
   return (
     <List>
       {fixtureDates.map((date, index) => (
-        <div class="grid text-center" key={index}>
+        <div className="grid text-center" key={index}>
           <h4>
-            {new Date(date).toLocaleDateString("en-us", {
+            {new Date(date)?.toLocaleDateString("en-us", {
               weekday: "long",
               year: "numeric",
               month: "short",
               day: "2-digit",
-            })}
+            }) ?? ""}
           </h4>
           <Divider />
           {groupedFixtures[date].map((game) => (
@@ -67,7 +68,7 @@ const Fixtures = ({ fixtures }) => {
                         marginX: ".4em",
                       }}
                     >
-                      {convertMillitaryTimeToStandardTime(game.time)}
+                      {convertMilitaryTimeToStandardTime(game.time)}
                     </Box>
                     <Typography>{game.away_name}</Typography>
                   </Box>
@@ -92,24 +93,41 @@ const Fixtures = ({ fixtures }) => {
   );
 };
 
-const convertMillitaryTimeToStandardTime = (timeString) => {
-  const time = timeString.split(":");
-  const hours = Number(time[0]);
-  const minutes = Number(time[1]);
-
-  let timeValue;
-  if (hours > 0 && hours <= 22) {
-    timeValue = "" + hours;
-  } else if (hours > 12) {
-    timeValue = "" + (hours - 12);
-  } else if (hours === 0) {
-    timeValue = "12";
+const convertMilitaryTimeToStandardTime = (timeString) => {
+  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/; // Regex pattern for military time
+  if (!timeRegex.test(timeString)) {
+    throw new Error("Invalid time string");
   }
 
-  timeValue += minutes < 10 ? ":0" + minutes : ":" + minutes; // get minutes
-  //timeValue += hours >= 12 ? " P.M." : " A.M."; // get AM/PM
+  const [hours, minutes] = timeString.split(":").map(Number);
+
+  let timeValue;
+  if (hours === 0) {
+    timeValue = "12";
+  } else if (hours <= 12) {
+    timeValue = `${hours}`;
+  } else {
+    timeValue = `${hours - 12}`;
+  }
+
+  timeValue += `:${minutes.toString().padStart(2, "0")}`;
+  timeValue += hours >= 12 ? " PM" : " AM";
 
   return timeValue;
 };
 
+
 export default Fixtures;
+
+Fixtures.propTypes = {
+  fixtures: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      home_name: PropTypes.string.isRequired,
+      away_name: PropTypes.string.isRequired,
+      location: PropTypes.string.isRequired,
+      time: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+    })
+  ),
+};
