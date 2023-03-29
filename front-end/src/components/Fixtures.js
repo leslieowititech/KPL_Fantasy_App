@@ -1,12 +1,15 @@
 import React from "react";
+
 import {
   List,
-  ListItem,
   Typography,
   Card,
-  ListItemText,
   Box,
+  Divider,
+  Grid,
+  Button,
 } from "@mui/material";
+import StadiumIcon from "@mui/icons-material/Stadium";
 
 const Fixtures = ({ fixtures }) => {
   const groupFixturesByDate = (fixtures) => {
@@ -22,40 +25,68 @@ const Fixtures = ({ fixtures }) => {
   };
 
   const groupedFixtures = groupFixturesByDate(fixtures);
+  console.log(groupedFixtures);
 
   const fixtureDates = Object.keys(groupedFixtures);
 
   return (
     <List>
       {fixtureDates.map((date, index) => (
-        <Card key={index}>
-          <Typography variant="h4">
+        <div class="grid text-center" key={index}>
+          <h4>
             {new Date(date).toLocaleDateString("en-us", {
               weekday: "long",
               year: "numeric",
               month: "short",
               day: "2-digit",
             })}
-          </Typography>
+          </h4>
+          <Divider />
           {groupedFixtures[date].map((game) => (
-            <List key={game.id}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Typography variant="p">{game.home_name}</Typography>
-                <Box sx={{ border: "1px solid grey", maxWidth: "max-content" }}>
-                  {convertMillitaryTimeToStandardTime(game.time)}
-                </Box>
-                <Typography>{game.away_name}</Typography>
-              </Box>
-            </List>
+            <div class="g-col-4" key={game.id}>
+              <Grid columns={3}>
+                <Grid xs={2} item>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      maxWidth: "max-content",
+                      border: "1px solid lightgrey",
+                      marginRight: "4em",
+                    }}
+                  >
+                    <Typography variant="p">{game.home_name}</Typography>
+                    <Box
+                      sx={{
+                        border: "1px solid lightgrey",
+                        maxWidth: "max-content",
+                        paddingY: ".2em",
+                        paddingX: ".4em",
+                        marginX: ".4em",
+                      }}
+                    >
+                      {convertMillitaryTimeToStandardTime(game.time)}
+                    </Box>
+                    <Typography>{game.away_name}</Typography>
+                  </Box>
+                </Grid>
+                <Grid columns={2} sx={{ border: "1px solid red" }} xs={2} item>
+                  <Grid>
+                    <StadiumIcon />
+                  </Grid>
+                  <Grid>
+                    <Typography>{game.location}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid xs={2} item>
+                  <Button variant="outlined">Quick View</Button>
+                </Grid>
+              </Grid>
+            </div>
           ))}
-        </Card>
+        </div>
       ))}
     </List>
   );
